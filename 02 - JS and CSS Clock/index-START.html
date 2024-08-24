@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>JS + CSS Clock</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
-
-
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS + CSS Clock</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
@@ -16,60 +14,173 @@
       </div>
     </div>
 
+    <style>
+      html {
+        background: #018ded url(https://unsplash.it/1500/1000?image=881&blur=5);
+        background-size: cover;
+        font-family: "helvetica neue";
+        text-align: center;
+        font-size: 10px;
+      }
 
-  <style>
-    html {
-      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
-      background-size: cover;
-      font-family: 'helvetica neue';
-      text-align: center;
-      font-size: 10px;
-    }
+      body {
+        margin: 0;
+        font-size: 2rem;
+        display: flex;
+        flex: 1;
+        min-height: 100vh;
+        align-items: center;
+      }
 
-    body {
-      margin: 0;
-      font-size: 2rem;
-      display: flex;
-      flex: 1;
-      min-height: 100vh;
-      align-items: center;
-    }
+      .clock {
+        width: 30rem;
+        height: 30rem;
+        border: 20px solid white;
+        border-radius: 50%;
+        margin: 50px auto;
+        position: relative;
+        padding: 2rem;
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), inset 0 0 0 3px #efefef,
+          inset 0 0 10px black, 0 0 10px rgba(0, 0, 0, 0.2);
+      }
 
-    .clock {
-      width: 30rem;
-      height: 30rem;
-      border: 20px solid white;
-      border-radius: 50%;
-      margin: 50px auto;
-      position: relative;
-      padding: 2rem;
-      box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
-        inset 0 0 0 3px #EFEFEF,
-        inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
-    }
+      .clock-face {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform: translateY(
+          -3px
+        ); /* account for the height of the clock hands */
+      }
 
-    .clock-face {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
-    }
+      .hand {
+        width: 50%;
+        height: 6px;
+        background: black;
+        position: absolute;
+        top: 50%;
+        transition: all 0.05s;
+        transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+      }
+      
+    </style>
 
-    .hand {
-      width: 50%;
-      height: 6px;
-      background: black;
-      position: absolute;
-      top: 50%;
-    }
+    <script>
+      const secondsArm = document.querySelector(".second-hand");
+      const minutesArm = document.querySelector(".min-hand");
+      const hoursArm = document.querySelector(".hour-hand");
 
-  </style>
+      const todayDate = new Date();
 
-  <script>
+      function calculateHours() {
+        if (todayDate.getHours() > 12) {
+          return todayDate.getHours() - 12;
+        } else {
+          return todayDate.getHours();
+        }
+      }
+      let todayHours = calculateHours();
+      let todayMinutes = todayDate.getMinutes();
+      let todaySeconds = todayDate.getSeconds();
 
+      let secondsRotation = Number(todaySeconds) * 6 + 90 + 6;
+      let minutesRotation = Number(todayMinutes) * 6 + 90;
+      let hoursRotation = Number(todayHours) * 30 + 90 + 12;
+      // console.log(todayHours, todayMinutes, todaySeconds);
 
-  </script>
-</body>
+      function startsSeconds(seconds, secondsRotation) {
+        // your function code here
+        secondsArm.setAttribute(
+          "style",
+          `transform-origin: right; transform: rotate(${secondsRotation}deg)`
+        );
+        setInterval(() => {
+          if (todaySeconds > 59) {
+            todaySeconds = 0;
+          }
+          if (secondsRotation >= 360) {
+            secondsRotation = 0;
+          }
+
+          todaySeconds += 1;
+          secondsArm.setAttribute(
+            "style",
+            `transform-origin: right; transform: rotate(${secondsRotation}deg)`
+          );
+          secondsRotation += 6;
+          // console.log(todaySeconds, secondsRotation);
+        }, 1000);
+      }
+
+      function startsMinutes(minutes, minutesRotation) {
+        // your function code here
+        minutesArm.setAttribute(
+          "style",
+          `transform-origin: right; transform: rotate(${minutesRotation}deg)`
+        );
+        setInterval(() => {
+          if (todayMinutes > 59) {
+            todayMinutes = 0;
+          }
+          if (minutesRotation >= 360) {
+            minutesRotation = 0;
+          }
+
+          todayMinutes += 1;
+          minutesArm.setAttribute(
+            "style",
+            `transform-origin: right; transform: rotate(${minutesRotation}deg)`
+          );
+          minutesRotation += 6;
+          // console.log(todayMinutes, minutesRotation);
+        }, 1000 * 60);
+      }
+
+      function startsHours(hours, hoursRotation) {
+        // your function code here
+        hoursArm.setAttribute(
+          "style",
+          `transform-origin: right; transform: rotate(${hoursRotation}deg)`
+        );
+        setInterval(() => {
+          if (todayHours > 12) {
+            todayHours = 0;
+          }
+          if (hoursRotation >= 360) {
+            hoursRotation = 0;
+          }
+
+          todayHours += 1;
+          hoursArm.setAttribute(
+            "style",
+            `transform-origin: right; transform: rotate(${hoursRotation}deg)`
+          );
+          hoursRotation += 30;
+          // console.log(todayHours, hoursRotation);
+        }, 1000 * 60 * 60 );
+      }
+
+      function startClock(
+        seconds,
+        secondsRotation,
+        minutes,
+        minutesRotation,
+        hours,
+        hoursRotation
+      ) {
+        startsSeconds(seconds, secondsRotation);
+        startsMinutes(minutes, minutesRotation);
+        startsHours(hours, hoursRotation);
+      }
+
+      startClock(
+        todaySeconds,
+        secondsRotation,
+        todayMinutes,
+        minutesRotation,
+        todayHours,
+        hoursRotation
+      );
+    </script>
+  </body>
 </html>
